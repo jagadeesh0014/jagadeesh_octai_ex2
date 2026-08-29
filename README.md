@@ -217,6 +217,8 @@ notify-on-failure:
         ${{ secrets.SLACK_WEBHOOK_URL }}How it works:
 ✅ Success → Notification job skipped🚨 Failure → Slack message in #all-github with logs link
 
+```
+<img width="1551" height="821" alt="image" src="https://github.com/user-attachments/assets/3a3ba76f-5cc3-496f-88f5-b95094cbd855" />
 
 ---
 
