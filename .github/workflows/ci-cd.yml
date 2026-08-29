@@ -1,0 +1,92 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  test-and-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          cd app
+          pip install -r requirements.txt
+          pip install pip-audit
+      
+      - name: Run Unit Tests
+        run: |
+          cd app
+          pytest tests/test_unit.py -v
+      
+      - name: Run Integration Tests
+        run: |
+          cd app
+          pytest tests/test_integration.py -v
+      
+      - name: Dependency Vulnerability Scan
+        run: |
+          cd app
+          pip-audit --desc
+      
+      - name: Container Vulnerability Scan - Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: './app'
+          severity: 'CRITICAL,HIGH'
+
+  build-and-push:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test-and-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/exercise-2-app:latest,${{ secrets.DOCKER_USERNAME }}/exercise-2-app:${{ github.sha }}
+
+  deploy-staging:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying to staging environment..."
+          echo "Image: ${{ secrets.DOCKER_USERNAME }}/exercise-2-app:${{ github.sha }}"
+          # Add your staging deploy commands here (EC2, ECS, etc)
+          echo "Staging deployment successful!"
+
+  deploy-production:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: 
+      name: production
+      url: https://your-prod-url.com
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to PRODUCTION after manual approval..."
+          echo "Production deployment successful!"
