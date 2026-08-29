@@ -369,15 +369,3 @@ Production deployment workflow showing:
 - Add deployment notifications via Slack or Microsoft Teams
 
 ---
-
-## Create README and Push
-
-```bash
-cat > README.md << 'EOF'
-# Paste the README content here
-EOF
-
-git add README.md
-git commit -m "docs: add Exercise-2 README with architecture, security, cost"
-git push origin main
-```
