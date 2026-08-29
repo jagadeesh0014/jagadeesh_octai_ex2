@@ -4,6 +4,9 @@ on:
     branches: [ main ]
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 jobs:
   test-and-scan:
     runs-on: ubuntu-latest
