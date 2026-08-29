@@ -114,6 +114,23 @@ Run the container:
 ```bash
 docker run -p 5000:5000 exercise-2-app
 ```
+Workflow Optimization
+Path IgnoresTo optimize cost and avoid unnecessary builds, we have configured paths-ignore in the workflow. Any changes to documentation files will NOT trigger build and deployment pipelines.
+```bash
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'      # All markdown files (README.md, etc.)
+      - 'docs/**'    # Documentation folder
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+```
+Benefit: If you only update README.md or docs, the expensive build-and-push and deploy jobs are skipped, saving GitHub Actions minutes and Docker Hub pulls/pushes. 
+Build triggers only when actual app code, Dockerfile, or requirements change.
 
 ---
 
