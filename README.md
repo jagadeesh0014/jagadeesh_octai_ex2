@@ -332,7 +332,8 @@ docker push jyerramcdocker/exercise-2-app:latest
 
 ## Evidence
 
-Include screenshots demonstrating:
+<img width="1882" height="823" alt="image" src="https://github.com/user-attachments/assets/fd546f59-38a7-4ec7-b498-8065a5209e8b" />
+
 
 ### Screenshot 1
 
