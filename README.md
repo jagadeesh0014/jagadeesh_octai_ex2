@@ -335,21 +335,21 @@ docker push jyerramcdocker/exercise-2-app:latest
 <img width="1882" height="823" alt="image" src="https://github.com/user-attachments/assets/fd546f59-38a7-4ec7-b498-8065a5209e8b" />
 
 
-### Screenshot 1
-
 Pull Request execution showing:
 
 - Tests passed
 - Security scans passed
 
-### Screenshot 2
+<img width="795" height="163" alt="image" src="https://github.com/user-attachments/assets/59964d73-90fa-4be7-bb8b-61166a5c2a5f" />
+
 
 Push to `main` showing:
 
 - Docker image build successful
 - Docker Hub push successful
 
-### Screenshot 3
+<img width="1911" height="927" alt="image" src="https://github.com/user-attachments/assets/4a80af6c-bd18-4b94-bc89-1c9ab1b37eb1" />
+
 
 Production deployment workflow showing:
 
