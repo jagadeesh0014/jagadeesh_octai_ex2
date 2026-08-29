@@ -69,3 +69,26 @@ jobs:
       name: production
     steps:
       - run: echo "Deploying to PRODUCTION after approval..."
+  notify-on-failure:
+    if: failure()
+    needs: [test-and-scan, build-and-push, deploy-staging, deploy-production]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack on Failure
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "🚨 CI/CD Pipeline FAILED for ${{ github.repository }}!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🚨 Build Failed!*\n*Repo:* ${{ github.repository }}\n*Branch:* ${{ github.ref }}\n*Commit:* `${{ github.sha }}`\n*Author:* ${{ github.actor }}\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|👉 View Logs>"
+                  }
+                }
+              ]
+            }
