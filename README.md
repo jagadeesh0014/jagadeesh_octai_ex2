@@ -117,7 +117,7 @@ docker run -p 5000:5000 exercise-2-app
 
 Workflow Optimization:
 
-Path IgnoresTo optimize cost and avoid unnecessary builds, we have configured paths-ignore in the workflow. Any changes to documentation files will NOT trigger build and deployment pipelines.
+Path Ignores To optimize cost and avoid unnecessary builds, we have configured paths-ignore in the workflow. Any changes to documentation files will NOT trigger build and deployment pipelines.
 
 ```bash
 YAML
