@@ -184,6 +184,40 @@ For the production environment:
 - Create a Pull Request → Runs testing and security scans
 - Push to `main` → Runs full deployment pipeline
 
+## 🔔 CI/CD Notifications Setup
+
+This project has Slack notification on pipeline failure.
+
+### Setup Steps
+
+**1. Create Slack Webhook**
+- Go to https://api.slack.com/messaging/webhooks
+- Create Incoming Webhook for `#all-github` channel
+- Copy the URL: `https://hooks.slack.com/services/...`
+
+**2. Add Secret in GitHub**
+- GitHub Repo → Settings → Secrets and variables → Actions
+- New repository secret
+- Name: `SLACK_WEBHOOK_URL`
+- Value: Paste your webhook URL
+
+**3. Workflow Configuration**
+Added `notify-on-failure` job in `.github/workflows/ci-cd.yml`:
+
+```yaml
+notify-on-failure:
+  if: failure()
+  needs: [test-and-scan, build-and-push, deploy-staging, deploy-production]
+  runs-on: ubuntu-latest
+  steps:
+    - name: Notify Slack on Failure
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+        --data "{\"text\":\"🚨 CI/CD FAILED - ${{ github.repository }}\", \"blocks\": [{\"type\": \"section\", \"text\": {\"type\": \"mrkdwn\", \"text\": \"*🚨 Build Failed!*\\n*Repo:* ${{ github.repository }}\\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|👉 View Logs>\"}}]}" \
+        ${{ secrets.SLACK_WEBHOOK_URL }}How it works:
+✅ Success → Notification job skipped🚨 Failure → Slack message in #all-github with logs link
+
+
 ---
 
 ## Security Considerations
