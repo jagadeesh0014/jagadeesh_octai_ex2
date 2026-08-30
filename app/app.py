@@ -7,7 +7,7 @@ def add(a, b):
 
 @app.route('/')
 def home():
-    return jsonify({"message": "Hello from Exercise-2! test ", "status": "ok"})
+    return jsonify({"message": "Hello from Exercise-2! test for live demo commit ", "status": "ok"})
 
 @app.route('/add/<int:a>/<int:b>')
 def add_route(a, b):
